@@ -1,16 +1,16 @@
-# my_ip_location
+# My IP Address
 
-A new Flutter project.
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 
-## Getting Started
+A small Flutter app that allows a user to enter an IP address or click a button to retrieve their current IP address. The app then queries [ipapi.co](https://ipapi.co/) to estimate the latitude and longitude for the provided IP address.
 
-This project is a starting point for a Flutter application.
+## Features
+- Handles failures gracefully
+- Unit testing
+- Abstraction of networking to allow easy replacement
 
-A few resources to get you started if this is your first Flutter project:
+## Limitations
+At the time of testing, the [ipapi.co](https://ipapi.co/) API returned a `RateLimited` error response instead of a `200` status. Because of this, the app returns a mock location (London) if the API request fails.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Also at the time of writing this readme the service that obtains the users current IP is down!
