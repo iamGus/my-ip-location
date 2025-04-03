@@ -13,9 +13,17 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreen extends State<LocationScreen> {
-  final IPService _ipService = IPService();
+  final IPService _ipService = IPService(null);
+  TextEditingController _textController = TextEditingController();
   final MapController _mapController = MapController();
   bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
 
   void _findLocation() async {
     try {
@@ -34,7 +42,7 @@ class _LocationScreen extends State<LocationScreen> {
   void _getCurrentIP() async {
     try {
       final currentIP = await _ipService.fetchMyIP();
-      print(currentIP);
+      _textController.text = currentIP;
     } catch (e) {
       print('error $e');
       //todo banner error
@@ -56,7 +64,7 @@ class _LocationScreen extends State<LocationScreen> {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  Expanded(child: TextField()),
+                  Expanded(child: TextField(controller: _textController)),
                   SizedBox(width: 8),
                   TextButton(
                     onPressed: _findLocation,
