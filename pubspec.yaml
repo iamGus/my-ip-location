@@ -37,6 +37,8 @@ dependencies:
   flutter_map: ^8.1.1
   latlong2: ^0.9.1
   dio: ^5.8.0+1
+  mockito: ^5.4.5
+  http_mock_adapter: ^0.6.1
 
 dev_dependencies:
   flutter_test:
