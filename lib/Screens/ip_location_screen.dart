@@ -35,12 +35,18 @@ class _LocationScreen extends State<LocationScreen> {
       return; // Exit the method early
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       final location = await _ipService.fetchMyLocation(ipAddress);
       _mapController.move(LatLng(location.lat, location.long), 13);
     } catch (e) {
       print('error $e');
-      //todo banner error
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Sorry there was an error: $e')));
     } finally {
       setState(() {
         _isLoading = false;
@@ -49,12 +55,17 @@ class _LocationScreen extends State<LocationScreen> {
   }
 
   void _getCurrentIP() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       final currentIP = await _ipService.fetchMyIP();
       _textController.text = currentIP;
     } catch (e) {
       print('error $e');
-      //todo banner error
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Sorry there was an error: $e')));
     } finally {
       setState(() {
         _isLoading = false;
@@ -66,38 +77,49 @@ class _LocationScreen extends State<LocationScreen> {
   Widget build(context) {
     return Scaffold(
       appBar: AppBar(title: Text('My IP Location')),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                Expanded(child: TextField(controller: _textController)),
-                SizedBox(width: 8),
-                TextButton(
-                  onPressed: _findLocation,
-                  child: Text('Find location'),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(child: TextField(controller: _textController)),
+                    SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: _findLocation,
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text('Find location'),
+                    ),
+                    SizedBox(width: 8),
+                    TextButton(
+                      onPressed: _getCurrentIP,
+                      child: Text('What is my IP'),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                TextButton(
-                  onPressed: _getCurrentIP,
-                  child: Text('What is my IP'),
+              ),
+              Expanded(
+                child: FlutterMap(
+                  mapController: _mapController,
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'dev.my-ip-location.example',
+                      // Plenty of other options available!
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Expanded(
-            child: FlutterMap(
-              mapController: _mapController,
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'dev.my-ip-location.example',
-                  // Plenty of other options available!
-                ),
-              ],
-            ),
-          ),
+          if (_isLoading) Center(child: CircularProgressIndicator()),
         ],
       ),
     );
