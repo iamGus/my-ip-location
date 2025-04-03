@@ -11,7 +11,6 @@ class ApiClient {
       final response = await dio.get(path);
       return response;
     } on DioException catch (e) {
-      // Handle Dio exceptions
       print('Error: ${e.message}');
       throw e;
     }

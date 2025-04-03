@@ -32,7 +32,7 @@ class _LocationScreen extends State<LocationScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Please enter an IP address')));
-      return; // Exit the method early
+      return;
     }
 
     setState(() {
@@ -112,7 +112,6 @@ class _LocationScreen extends State<LocationScreen> {
                       urlTemplate:
                           'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       userAgentPackageName: 'dev.my-ip-location.example',
-                      // Plenty of other options available!
                     ),
                   ],
                 ),

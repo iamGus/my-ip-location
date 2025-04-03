@@ -12,7 +12,7 @@ class MyIPLocation extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My IP Location',
-      theme: ThemeData(primarySwatch: Colors.green),
+      theme: ThemeData(),
       home: const LocationScreen(),
     );
   }
