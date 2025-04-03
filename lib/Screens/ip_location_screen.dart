@@ -26,8 +26,17 @@ class _LocationScreen extends State<LocationScreen> {
   }
 
   void _findLocation() async {
+    final ipAddress = _textController.text;
+
+    if (ipAddress.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please enter an IP address')));
+      return; // Exit the method early
+    }
+
     try {
-      final location = await _ipService.fetchMyLocation('92.17.206.222');
+      final location = await _ipService.fetchMyLocation(ipAddress);
       _mapController.move(LatLng(location.lat, location.long), 13);
     } catch (e) {
       print('error $e');
@@ -55,44 +64,41 @@ class _LocationScreen extends State<LocationScreen> {
 
   @override
   Widget build(context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('My IP Location')),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(child: TextField(controller: _textController)),
-                  SizedBox(width: 8),
-                  TextButton(
-                    onPressed: _findLocation,
-                    child: Text('Find location'),
-                  ),
-                  SizedBox(width: 8),
-                  TextButton(
-                    onPressed: _getCurrentIP,
-                    child: Text('What is my IP'),
-                  ),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(title: Text('My IP Location')),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                Expanded(child: TextField(controller: _textController)),
+                SizedBox(width: 8),
+                TextButton(
+                  onPressed: _findLocation,
+                  child: Text('Find location'),
+                ),
+                SizedBox(width: 8),
+                TextButton(
+                  onPressed: _getCurrentIP,
+                  child: Text('What is my IP'),
+                ),
+              ],
             ),
-            Expanded(
-              child: FlutterMap(
-                mapController: _mapController,
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'dev.my-ip-location.example',
-                    // Plenty of other options available!
-                  ),
-                ],
-              ),
+          ),
+          Expanded(
+            child: FlutterMap(
+              mapController: _mapController,
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'dev.my-ip-location.example',
+                  // Plenty of other options available!
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
